@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8" />
+
+<head>
+
+    <title>Mapa Comunas 1 y 3</title>
+    <link rel="stylesheet" href="lib/leaflet/leaflet.css" />
+    <script src="lib/leaflet/leaflet.js"></script>
+
+    <script src="capas.js"></script>
+
+    <link rel="stylesheet" href="lib/leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.min.css" />
+    <script src="lib/leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.min.js"></script>
+
+</head>
+
+<body>
+
+    <div id="mapid" style="width: 800px; height: 600px;">
+    </div>
+
+    <script>
+        var basemaps = {
+            Satelite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                maxZoom: 18,
+                attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+            }),
+
+            MapaBase: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+                maxZoom: 18,
+                attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+            }),
+
+            Calles: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            })
+        };
+
+
+        var map = L.map('mapid', {
+            zoom: 10
+        }).setView([3.45327, -76.55046], 14);
+
+
+        basemaps.MapaBase.addTo(map);
+
+        var groupedOverlays = {
+            "Sembrando Compromiso": {
+                "Huertas": wmsHuertas,
+                "Comunas 1 y 3": wmsComunas1_3,
+                "Puntos de bloqueo": wmsBloqueos,
+                "Áreas de Servicio (Huertas)": wmsAreasServicioHuertas,
+                "Comedores Comunitarios": wmsComedores,
+                "Áreas de Servicio (Comedores)": wmsAreasServicioComedores,
+            },
+            "Contexto Ecosistémico": {
+                "Parque Nacional Natural Farallones de Cali": wmsParquesNacionales,
+                "Cuencas Hidrográficas": wmsCuencasHidrograficas,
+                "Drenaje Sencillo": wmsDrenajeSencillo,
+                "Drenaje Doble": wmsDrenajesDobles,
+                "Zonas Verdes (Áreas protectoras)": wmsZonasVerdesAreasP,
+                "Humedales": wmsHumedales,
+                "Corredores Ambientales": wmsCorredoresAmbientales,
+                "Cuerpos de Agua": wmsCuerposAgua,
+                "Parques Naturales Recreacionales": wmsParquesNatRecreacionales
+            },
+            "Contexto Político Socioeconómico": {
+                "IPM": wmsIPM,
+                "Equipamentos Recreación": wmsEquipamentosRecreacion,
+                "Zonas Homogéneas Geoeconómicas": wmsZonasHomogeneasGeoeco,
+            },
+            "Contexto Político Administrativo": {
+                "Comunas": wmsComunas,
+                "Veredas Participantes": wmsVeredasParticipantes
+            }
+        };
+
+        L.control.groupedLayers(basemaps, groupedOverlays, {
+            collapsed: true
+        }).addTo(map);
+
+        wmsDrenajesDobles.addTo(map);
+        wmsComunas1_3.addTo(map);
+        wmsComunas.addTo(map);
+        wmsHumedales.addTo(map);
+        wmsHuertas.addTo(map);
+
+        wmsComunas.setZIndex(10);
+        wmsComunas1_3.setZIndex(10);
+        wmsDrenajesDobles.setZIndex(20);
+        wmsHumedales.setZIndex(30);
+        wmsHuertas.setZIndex(40);
+    </script>
+
+</body>
+
+</html>
